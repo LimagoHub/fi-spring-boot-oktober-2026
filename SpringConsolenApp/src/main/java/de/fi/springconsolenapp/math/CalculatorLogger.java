@@ -1,12 +1,18 @@
 package de.fi.springconsolenapp.math;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+@Component
+@Qualifier("logger")
+@RequiredArgsConstructor
 public class CalculatorLogger implements  Calculator {
 
+    @Qualifier("impl")
     private final Calculator calculator;
 
-    public CalculatorLogger(final Calculator calculator) {
-        this.calculator = calculator;
-    }
+
 
     public double add(final double a, final double b) {
         System.out.println("Add wurde gerufen");
