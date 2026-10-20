@@ -1,4 +1,4 @@
-package de.fi.webapp.persistence.mapper;
+package de.fi.webapp.presentation.mapper;
 
 import de.fi.webapp.presentation.dto.PersonDto;
 import de.fi.webapp.service.model.Person;
