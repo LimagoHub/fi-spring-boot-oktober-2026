@@ -1,21 +1,25 @@
-package de.fi.webapp.presentation.controller;
+package de.fi.webapp.presentation.controller.v1;
 
 
 import de.fi.webapp.presentation.dto.PersonDto;
+import de.fi.webapp.presentation.error.IdMismatchException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/personen")
+@RequestMapping("/v1/personen")
 public class PersonenController {
 
 
@@ -62,5 +66,34 @@ public class PersonenController {
         );
 
         return ResponseEntity.ok(liste);
+    }
+
+    @DeleteMapping(path="/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
+        if(id.toString().endsWith("1"))
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok().build();
+
+    }
+
+    @PostMapping(path="", consumes =  MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> insert(@Valid @RequestBody PersonDto personDto, UriComponentsBuilder uriBuilder) {
+        System.out.println(personDto + " wurde erfasst");
+
+        UriComponents uriComponents = uriBuilder.path("/v1/personen/{id}").buildAndExpand(personDto.getId());
+        return ResponseEntity.created(uriComponents.toUri()).build();
+    }
+
+    @PutMapping(path="/{id}", consumes =  MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> update(@PathVariable UUID id, @Valid @RequestBody PersonDto personDto) {
+
+        if(! personDto.getId().equals(id)) throw new IdMismatchException("Upps");
+
+        if(id.toString().endsWith("1"))
+            return ResponseEntity.notFound().build();
+
+        System.out.println(personDto + " wurde geaendert");
+        return ResponseEntity.ok().build();
     }
 }
