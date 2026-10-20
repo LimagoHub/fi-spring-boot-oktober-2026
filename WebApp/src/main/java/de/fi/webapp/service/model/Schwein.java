@@ -25,4 +25,8 @@ public class Schwein {
         setGewicht(getGewicht() + 1);
     }
 
+    public void fuettern(int anzahlKartoffel) {
+        setGewicht(getGewicht() + anzahlKartoffel);
+    }
+
 }
