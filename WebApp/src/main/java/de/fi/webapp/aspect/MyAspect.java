@@ -7,16 +7,25 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.Instant;
+
 @Component
 @Aspect
 @Slf4j
 public class MyAspect {
 
-    @Before( "execution(* de.fi.webapp.presentation.controller.v1.PersonenController.*(..))")
+    @Before( "execution(* de.fi.webapp.presentation.controller.v1.PersonenController.*(..))")  // Pointcut
     public void peterle(JoinPoint joinPoint) {
-        log.warn("############ "+ joinPoint.getSignature().getName() + " #################################");
+        log.warn("############ "+ joinPoint.getSignature().getName() + " #################################"); // Advice
 
-
+/*
+        Instant start = Instant.now();
+        //
+        Instant end = Instant.now();
+        Duration duration = Duration.between(start, end);
+        System.out.println(duration.toMillis());
+*/
     }
 
     @AfterReturning( value = "execution(* de.fi.webapp.presentation.controller.v1.PersonenController.*(..))", returning = "result")
