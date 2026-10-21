@@ -15,7 +15,10 @@ import java.time.Instant;
 @Slf4j
 public class MyAspect {
 
-    @Before( "execution(* de.fi.webapp.presentation.controller.v1.PersonenController.*(..))")  // Pointcut
+
+
+
+    @Before( "Pointcuts.PersonControllerMethodes()")  // Pointcut
     public void peterle(JoinPoint joinPoint) {
         log.warn("############ "+ joinPoint.getSignature().getName() + " #################################"); // Advice
 
@@ -28,7 +31,7 @@ public class MyAspect {
 */
     }
 
-    @AfterReturning( value = "execution(* de.fi.webapp.presentation.controller.v1.PersonenController.*(..))", returning = "result")
+    @AfterReturning( value = "Pointcuts.PersonControllerMethodes()", returning = "result")
     public void afterReturning(JoinPoint joinPoint, Object result) {
         log.warn("############ "+ joinPoint.getSignature().getName() + " #################################");
         log.warn(result.toString());
