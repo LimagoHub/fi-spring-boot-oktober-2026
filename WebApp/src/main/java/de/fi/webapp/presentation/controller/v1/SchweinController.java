@@ -1,12 +1,14 @@
 package de.fi.webapp.presentation.controller.v1;
 
 
+import de.fi.webapp.presentation.dto.FutterungDto;
 import de.fi.webapp.presentation.dto.SchweinDto;
 import de.fi.webapp.presentation.error.IdMismatchException;
 import de.fi.webapp.presentation.mapper.SchweinDtoMapper;
 import de.fi.webapp.service.SchweineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +59,6 @@ public class SchweinController {
     @PostMapping(path = "/{id}/fuetterungen")
     public ResponseEntity<Void> fuettern(@PathVariable UUID id) {
         service.fuettern(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

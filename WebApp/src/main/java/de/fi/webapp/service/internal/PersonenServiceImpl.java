@@ -1,6 +1,7 @@
 package de.fi.webapp.service.internal;
 
 import de.fi.webapp.persistence.repository.PersonenRepository;
+import de.fi.webapp.service.BlacklistService;
 import de.fi.webapp.service.PersonenService;
 import de.fi.webapp.service.exception.AlreadyExistsException;
 import de.fi.webapp.service.exception.NotFoundException;
@@ -8,6 +9,7 @@ import de.fi.webapp.service.exception.PersonenServiceException;
 import de.fi.webapp.service.mapper.PersonMapper;
 import de.fi.webapp.service.model.Person;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -24,7 +26,9 @@ public class PersonenServiceImpl implements PersonenService {
 
     private final PersonenRepository repo;
     private final PersonMapper mapper;
-
+    //private final BlacklistService blacklistService; // Eigentlich richtige Lösung ist das BlacklistService in der Persistence Layer zu implementieren
+    @Qualifier("antipathen")
+    private final List<String> antipathen;
 
     /*
         person ist null -> PSE
@@ -56,8 +60,8 @@ public class PersonenServiceImpl implements PersonenService {
         }
     }
 
-    private static void businessCheck(final Person person) throws PersonenServiceException {
-        if(person.getVorname().equals("Attila"))  throw new PersonenServiceException("Antipath");
+    private void businessCheck(final Person person) throws PersonenServiceException {
+        if(antipathen.contains(person.getVorname()))  throw new PersonenServiceException("Antipath");
     }
 
     private static void validatePerson(final Person person) throws PersonenServiceException {
