@@ -8,4 +8,7 @@ public class Pointcuts {
     public void PersonControllerMethodes() {
 
     }
+
+    @Pointcut("@within(org.springframework.stereotype.Service)")
+    public void serviceMethods(){}
 }

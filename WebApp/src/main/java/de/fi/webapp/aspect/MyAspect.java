@@ -52,8 +52,13 @@ public class MyAspect {
         log.warn("############ "+ joinPoint.getSignature().getName() + " #################################");
     }
 
-    @Around( value = "execution(* de.fi.webapp.presentation.controller.v1.PersonenController.*(..))")
+    @Around( value = "@within(de.fi.webapp.aspect.Benchmark)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        return joinPoint.proceed();
+
+        Instant start = Instant.now();
+        var result = joinPoint.proceed();
+        Instant end = Instant.now();
+        System.out.println(Duration.between(start, end).toMillis());
+        return result;
     }
 }
