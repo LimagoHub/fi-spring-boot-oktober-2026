@@ -2,6 +2,7 @@ package de.fi.webapp.presentation.controller.v1;
 
 import de.fi.webapp.presentation.dto.PersonDto;
 import de.fi.webapp.service.PersonenService;
+import de.fi.webapp.service.exception.NotFoundException;
 import de.fi.webapp.service.exception.PersonenServiceException;
 import de.fi.webapp.service.model.Person;
 import org.junit.jupiter.api.Test;
@@ -130,5 +131,15 @@ class PersonenControllerTest {
         assertEquals(2,liste.size());
         verify(personenServiceMock, times(1)).findeAlle();
     }
+    @Test
+    void test6() throws Exception{
 
+
+        doThrow(new NotFoundException("Upps")).when(personenServiceMock).loeschen(any());
+
+        var entity = restTemplate.exchange("/v1/personen/b2e24e74-8686-43ea-baff-d9396b4202e0", HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, entity.getStatusCode());
+        verify(personenServiceMock, times(1)).loeschen(UUID.fromString("b2e24e74-8686-43ea-baff-d9396b4202e0"));
+    }
 }

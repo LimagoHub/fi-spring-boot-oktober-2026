@@ -1,5 +1,6 @@
 package de.fi.webapp.service.internal;
 
+import de.fi.webapp.event.PersonCreatedEvent;
 import de.fi.webapp.persistence.repository.PersonenRepository;
 import de.fi.webapp.service.BlacklistService;
 import de.fi.webapp.service.PersonenService;
@@ -10,6 +11,7 @@ import de.fi.webapp.service.mapper.PersonMapper;
 import de.fi.webapp.service.model.Person;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,6 +31,8 @@ public class PersonenServiceImpl implements PersonenService {
     //private final BlacklistService blacklistService; // Eigentlich richtige Lösung ist das BlacklistService in der Persistence Layer zu implementieren
     @Qualifier("antipathen")
     private final List<String> antipathen;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     /*
         person ist null -> PSE
@@ -51,6 +55,9 @@ public class PersonenServiceImpl implements PersonenService {
             businessCheck(person);
             if (repo.existsById(person.getId())) throw new AlreadyExistsException("Datensatz existiert bereits");
             repo.save(mapper.convert(person));
+
+            applicationEventPublisher.publishEvent(new PersonCreatedEvent(person.getId(), person.getVorname(), person.getNachname()));
+
         } catch (PersonenServiceException e) {
             throw e;
         } catch (AlreadyExistsException e) {
